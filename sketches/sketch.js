@@ -9,8 +9,6 @@ let ripples = [];
 let rippleInterval = 30;
 let framesSinceLastRipple = 0;
 
-let isInverted = false; // 반전 상태 저장
-
 function setup() {
   new Responsive().createResponsiveCanvas(
     cols * cellSize,
@@ -31,8 +29,7 @@ function setup() {
 
 function draw() {
   video.loadPixels();
-
-  background(isInverted ? 255 : 0);
+  background(0);
 
   // 자동 파동 생성
   framesSinceLastRipple++;
@@ -87,7 +84,7 @@ function draw() {
         }
 
         let finalSize = dotBaseSize + maxEffect;
-        fill(isInverted ? 0 : 255, 255 * (finalSize / (cellSize * 1.5)));
+        fill(255, 255 * (finalSize / (cellSize * 1.5)));
         ellipse(centerX, centerY, finalSize / 2, finalSize / 2);
       }
     }
@@ -95,13 +92,13 @@ function draw() {
 
   pop();
 
+  // 오래된 파동 제거
   ripples = ripples.filter((r) => frameCount - r.startFrame < r.lifeSpan);
 }
 
 function mousePressed() {
   let correctedX = width - mouseX;
   ripples.push(makeRipple(correctedX, mouseY, 15, 0.4));
-  isInverted = !isInverted; // 색 반전 토글
 }
 
 function makeRipple(x, y, strength, alpha = 1.0) {
